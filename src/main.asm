@@ -18,7 +18,7 @@ puts:
     ; Save registers that will be modified
     push si
     push ax
-    push bh
+    push bx
 
 .loop:
     lodsb          ; Load next char in al
