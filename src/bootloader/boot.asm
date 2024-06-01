@@ -12,19 +12,19 @@ nop
 
 bdb_oem:                    db 'MSWIN4.1'           ; 8 bytes
 bdb_bytes_per_sector:       dw 512
-bdb_sectors_per_sector:     db 1
+bdb_sectors_per_cluseter:   db 1
 bdb_reserved_sectors:       dw 1
 bdb_fat_count:              db 2
 bdb_dir_entries_count:      dw 0E0h
 bdb_total_sectors:          dw 2880                 ; 2880 * 512 = 1.44MB
 bdb_media_descriptor_type:  db 0F0h                 ; F0 = 3.5" 1.44MB floppy disk
 bdb_sectors_per_fat:        dw 9                    ; 9 sectors per track
-bdb_sectros_per_track:      dw 18
+bdb_sectors_per_track:      dw 18
 bdb_heads:                  dw 2
 bdb_hidden_sectors:         dd 0
 bdb_large_sector_count:     dd 0
 
-; Extended boot sector
+; Extended boot record
 ebr_drive_number:           db 0                    ; 0x00 = floppy, 0x80 = hdd
                             db 0                    ; Reserved
 ebr_signature:              db 0x29                 ; 0x29 = FAT12/16, 0x28 = FAT32
@@ -118,7 +118,7 @@ wait_for_key_and_reboot:
 ;
 
 ;
-; Converts na LBA address to a CHS address
+; Converts an LBA address to a CHS address
 ; Params:
 ;   ax              - LBA address
 ; Returns:
@@ -131,7 +131,7 @@ lba_to_chs:
     push dx
 
     xor dx, dx  ; dx = 0
-    div word [bdb_sectros_per_track]    ; ax = LBA / sectors_per_track
+    div word [bdb_sectors_per_track]    ; ax = LBA / sectors_per_track
                                         ; dx = LBA % sectors_per_track
     inc dx                              ; dx = LBA % sectors_per_track + 1 = sector
     mov cx, dx                          ; cx = sector
