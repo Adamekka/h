@@ -12,7 +12,7 @@ nop
 
 bdb_oem:                    db 'MSWIN4.1'           ; 8 bytes
 bdb_bytes_per_sector:       dw 512
-bdb_sectors_per_cluseter:   db 1
+bdb_sectors_per_cluster:   db 1
 bdb_reserved_sectors:       dw 1
 bdb_fat_count:              db 2
 bdb_dir_entries_count:      dw 0E0h
