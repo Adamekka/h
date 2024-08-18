@@ -282,7 +282,7 @@ lba_to_chs:
     shl ah, 6                           ; Shift upper 2 bits to the left
     or cl, ah                           ; ah = cylinder (upper 2 bits)
 
-    pop dx
+    pop ax
     mov dl, al                          ; dl = head
     pop ax
     ret
