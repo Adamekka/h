@@ -3,4 +3,6 @@ IndentWidth: 4
 InsertNewlineAtEOF: true
 
 AlignAfterOpenBracket: BlockIndent
+AlignOperands: AlignAfterOperator
+BreakBeforeBinaryOperators: All
 PointerAlignment: Left
