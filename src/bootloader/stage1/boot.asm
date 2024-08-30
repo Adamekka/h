@@ -107,7 +107,7 @@ start:
     mov di, buffer
 
 .search_kernel:
-    mov si, file_kernel_bin
+    mov si, file_stage2_bin
     mov cx, 11                      ; Compare up to 11 chars
     push di
     repe cmpsb
@@ -125,7 +125,7 @@ start:
 .found_kernel:
     ; di should point to the first byte of the file entry
     mov ax, [di + 26]             ; ax = First logical cluster field (offset 26)
-    mov [kernel_cluster], ax
+    mov [stage2_cluster], ax
 
     ; Load FAT from disk to memeory
     mov ax, [bdb_reserved_sectors]  ; LBA of first FAT
@@ -141,9 +141,9 @@ start:
 
 .load_kernel_loop:
     ; Read next cluster
-    mov ax, [kernel_cluster]
+    mov ax, [stage2_cluster]
     add ax, 31                      ; TODO: Hardcoded 31, should be bytes per cluster - 1
-                                    ; first cluster = (kernel_cluster - 2) * sectors_per_cluster + data_start
+                                    ; first cluster = (stage2_cluster - 2) * sectors_per_cluster + data_start
                                     ; start sector = reserved + fats + root dir size = 1 + 18 + 134 = 33
     mov cl, 1
     mov dl, [ebr_drive_number]
@@ -152,7 +152,7 @@ start:
     add bx, [bdb_bytes_per_sector]  ; TODO: Add will overflow if kernel.bit is larger than 64KB, need to check for overflow
 
     ; Compute location of next cluster
-    mov ax, [kernel_cluster]
+    mov ax, [stage2_cluster]
     mov cx, 3
     mul cx
     mov cx, 2
@@ -177,7 +177,7 @@ start:
     cmp ax, 0x0FF8                  ; End of file
     jae .read_finished
 
-    mov [kernel_cluster], ax
+    mov [stage2_cluster], ax
     jmp .load_kernel_loop
 
 .read_finished:
@@ -207,7 +207,7 @@ floppy_error:
     jmp wait_for_key_and_reboot
 
 kernel_not_found_error:
-    mov si, msg_kernel_not_found
+    mov si, msg_stage2_not_found
     call puts
     jmp wait_for_key_and_reboot
 
@@ -223,7 +223,7 @@ wait_for_key_and_reboot:
 
 ;
 ; Prints a string to the screen
-; Params:
+; Args:
 ;   si - Pointer to the string
 ;
 puts:
@@ -256,7 +256,7 @@ puts:
 
 ;
 ; Converts an LBA address to a CHS address
-; Params:
+; Args:
 ;   ax              - LBA address
 ; Returns:
 ;   cx [bits 0-5]   - Sector
@@ -290,7 +290,7 @@ lba_to_chs:
 
 ;
 ; Reads sectors from the disk
-; Params:
+; Args:
 ;   ax      - LBA a
 ;   cl      - Number of sectors to read (up to 128)
 ;   dl      - Drive number
@@ -339,7 +339,7 @@ disk_read:
 
 ;
 ; Resets disk controller
-; Params:
+; Args:
 ;   dl - Drive number
 ;
 disk_reset:
@@ -354,9 +354,9 @@ disk_reset:
 
 msg_booting:            db 'Booting...', ENDL, 0
 msg_disk_read_failed:   db 'Read from disk failed!', ENDL, 0
-msg_kernel_not_found:   db 'KERNEL.BIN file not found!', ENDL, 0
-file_kernel_bin:        db 'KERNEL  BIN'
-kernel_cluster:         dw 0
+msg_stage2_not_found:   db 'STAGE2.BIN file not found!', ENDL, 0
+file_stage2_bin:        db 'STAGE2  BIN'
+stage2_cluster:         dw 0
 
 KERNEL_LOAD_SEGMENT     equ 0x2000
 KERNEL_LOAD_OFFSET      equ 0

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if command -v dosbox-x >/dev/null 2>&1; then
+    for source_file in *.c; do
+        obj_file="${source_file%.c}.obj"
+        dosbox-x -nolog -c "H:" -c "C:\WATCOM\BINW\WCC -4 -d3 -s -wx -ms -zl -zq -fo=BUILD\STAGE2\C\\$obj_file SRC\BOOTLO~1\STAGE2\\$source_file" -c "exit"
+    done
+else
+    echo "dosbox-x not found"
+    exit 1
+fi

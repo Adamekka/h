@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if command -v dosbox-x >/dev/null 2>&1; then
+    obj_files=()
+    obj_files+=(../../../build/stage2/asm/*.obj)
+    obj_files+=(../../../build/stage2/c/*.obj)
+
+    rsp_file="linker.rsp"
+    echo "NAME BUILD\STAGE2.BIN" >"$rsp_file"
+    echo "FILE {" >>"$rsp_file"
+
+    for file in "${obj_files[@]}"; do
+        file="${file//\//\\}"
+        echo "${file:9}" >>"$rsp_file"
+    done
+
+    {
+        echo "}"
+        echo "OPTION MAP=BUILD\STAGE2.MAP"
+        echo "@SRC\BOOTLO~1\STAGE2\LINKER.LNK"
+    } >>"$rsp_file"
+
+    dosbox-x -nolog -c "H:" -c "C:\WATCOM\BINW\WLINK @SRC\BOOTLO~1\STAGE2\\$rsp_file" -c "exit"
+
+    rm "$rsp_file"
+else
+    echo "wlink or dosbox-x not found"
+    exit 1
+fi

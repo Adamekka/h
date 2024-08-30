@@ -17,7 +17,7 @@ start:
 
 ;
 ; Prints a string to the screen
-; Params:
+; Args:
 ;   ds:si - Pointer to the string
 ;
 puts:
