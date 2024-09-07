@@ -4,5 +4,7 @@ InsertNewlineAtEOF: true
 
 AlignAfterOpenBracket: BlockIndent
 AlignOperands: AlignAfterOperator
+AllowShortCaseLabelsOnASingleLine: true
 BreakBeforeBinaryOperators: All
+IndentCaseLabels: true
 PointerAlignment: Left
