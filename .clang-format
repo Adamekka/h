@@ -5,6 +5,8 @@ InsertNewlineAtEOF: true
 AlignAfterOpenBracket: BlockIndent
 AlignOperands: AlignAfterOperator
 AllowShortCaseLabelsOnASingleLine: true
+BinPackArguments: false
+BinPackParameters: false
 BreakBeforeBinaryOperators: All
 IndentCaseLabels: true
 PointerAlignment: Left

@@ -69,7 +69,9 @@ bool read_fat(FILE* disk) {
     );
 
     return read_sectors(
-        disk, g_boot_sector.reserved_sectors, g_boot_sector.sectors_per_fat,
+        disk,
+        g_boot_sector.reserved_sectors,
+        g_boot_sector.sectors_per_fat,
         g_fat
     );
 }
@@ -88,7 +90,8 @@ bool read_root_dir(FILE* disk) {
 
 DirectoryEntry* find_file(const char* name) {
     for (typeof(g_boot_sector.dir_entries_count) i = 0;
-         i < g_boot_sector.dir_entries_count; i++)
+         i < g_boot_sector.dir_entries_count;
+         i++)
         if (!memcmp(name, g_root_dir[i].filename, 11))
             return &g_root_dir[i];
 
