@@ -33,7 +33,7 @@ puts:
 
 
     mov ah, 0x0E    ; BIOS teletype function
-    mov bh, 0       ; Page number 0
+    xor bh, bh      ; Page number 0
     int 0x10        ; Call BIOS
 
     jmp .loop

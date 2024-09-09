@@ -10,7 +10,7 @@ entry:
     ; Set up stack
     mov ax, ds
     mov ss, ax
-    mov sp, 0
+    xor sp, sp
     mov bp, sp
     sti
 

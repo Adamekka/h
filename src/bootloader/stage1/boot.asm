@@ -39,7 +39,7 @@ ebr_system_id:              db 'FAT12   '           ; 8 bytes, padded with space
 
 start:
     ; Setup data segments
-    mov ax, 0                   ; Can't write to ds/ex directly, must use intermediate register
+    xor ax, ax                  ; Can't write to ds/ex directly, must use intermediate register
     mov ds, ax
     mov es, ax
 
@@ -212,7 +212,7 @@ kernel_not_found_error:
     jmp wait_for_key_and_reboot
 
 wait_for_key_and_reboot:
-    mov ah, 0
+    xor ah, ah
     int 16h         ; Wait for key press
     jmp 0FFFFh:0    ; Reboot
 
@@ -238,7 +238,7 @@ puts:
     jz .done
 
     mov ah, 0x0E    ; BIOS teletype function
-    mov bh, 0       ; Page number 0
+    xor bh, bh      ; Page number 0
     int 0x10        ; Call BIOS
 
     jmp .loop
@@ -344,7 +344,7 @@ disk_read:
 ;
 disk_reset:
     pusha
-    mov ah, 0
+    xor ah, ah
     stc
     int 13h
     jc floppy_error
