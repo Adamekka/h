@@ -10,28 +10,27 @@ bits 16
 ;
 jmp short start
 nop
-
-bdb_oem:                    db 'MSWIN4.1'           ; 8 bytes
+bdb_oem:                    db 'MSWIN4.1'               ; 8 bytes
 bdb_bytes_per_sector:       dw 512
 bdb_sectors_per_cluster:    db 1
 bdb_reserved_sectors:       dw 1
 bdb_fat_count:              db 2
-bdb_dir_entries_count:      dw 0E0h
-bdb_total_sectors:          dw 2880                 ; 2880 * 512 = 1.44MB
-bdb_media_descriptor_type:  db 0F0h                 ; F0 = 3.5" 1.44MB floppy disk
-bdb_sectors_per_fat:        dw 9                    ; 9 sectors per track
+bdb_dir_entries_count:      dw 0x0E0
+bdb_total_sectors:          dw 2880                     ; 2880 * 512 = 1.44MB
+bdb_media_descriptor_type:  db 0x0F0                    ; F0 = 3.5" 1.44MB floppy disk
+bdb_sectors_per_fat:        dw 9                        ; 9 sectors per track
 bdb_sectors_per_track:      dw 18
 bdb_heads:                  dw 2
 bdb_hidden_sectors:         dd 0
 bdb_large_sector_count:     dd 0
 
 ; Extended boot record
-ebr_drive_number:           db 0                    ; 0x00 = floppy, 0x80 = hdd
-                            db 0                    ; Reserved
-ebr_signature:              db 0x29                 ; 0x29 = FAT12/16, 0x28 = FAT32
-ebr_volume_id:              db 12h, 34h, 56h, 67h   ; Serial number, random number
-ebr_volume_label:           db 'hOS         '       ; 11 bytes, padded with spaces
-ebr_system_id:              db 'FAT12   '           ; 8 bytes, padded with spaces
+ebr_drive_number:           db 0                        ; 0x00 = floppy, 0x80 = hdd
+                            db 0                        ; Reserved
+ebr_signature:              db 0x29                     ; 0x29 = FAT12/16, 0x28 = FAT32
+ebr_volume_id:              db 0x12, 0x34, 0x56, 0x67   ; Serial number, random number
+ebr_volume_label:           db 'hOS         '           ; 11 bytes, padded with spaces
+ebr_system_id:              db 'FAT12   '               ; 8 bytes, padded with spaces
 
 ;
 ; Entrypoint
@@ -62,8 +61,8 @@ start:
 
     ; Read drive parameters (sectors per track, head count), instead of relying on data on disk
     push es
-    mov ah, 08h
-    int 13h
+    mov ah, 0x08
+    int 0x13
     jc floppy_error
     pop es
 
@@ -124,7 +123,7 @@ start:
 
 .found_kernel:
     ; di should point to the first byte of the file entry
-    mov ax, [di + 26]             ; ax = First logical cluster field (offset 26)
+    mov ax, [di + 26]               ; ax = First logical cluster field (offset 26)
     mov [stage2_cluster], ax
 
     ; Load FAT from disk to memeory
@@ -213,8 +212,8 @@ kernel_not_found_error:
 
 wait_for_key_and_reboot:
     xor ah, ah
-    int 16h         ; Wait for key press
-    jmp 0FFFFh:0    ; Reboot
+    int 0x16         ; Wait for key press
+    jmp 0x0FFFF:0    ; Reboot
 
 .halt:
     cli             ; Disable interrupts, so we don't get stuck in an infinite loop
@@ -267,7 +266,7 @@ lba_to_chs:
     push ax
     push dx
 
-    xor dx, dx  ; dx = 0
+    xor dx, dx
     div word [bdb_sectors_per_track]    ; ax = LBA / sectors_per_track
                                         ; dx = LBA % sectors_per_track
     inc dx                              ; dx = LBA % sectors_per_track + 1 = sector
@@ -308,13 +307,13 @@ disk_read:
     call lba_to_chs ; Convert LBA to CHS
     pop ax          ; AL = number of sectors to read
 
-    mov ah, 02h
+    mov ah, 0x02
     mov di, 3       ; Number of retries
 
 .retry:
     pusha           ; Save all registers
     stc             ; Set carry flag, some BIOSes require this
-    int 13h         ; Carry flag is set if error
+    int 0x13        ; Carry flag is set if error
     jnc .done
 
     ; Read failed
@@ -346,7 +345,7 @@ disk_reset:
     pusha
     xor ah, ah
     stc
-    int 13h
+    int 0x13
     jc floppy_error
     popa
     ret
@@ -363,7 +362,7 @@ KERNEL_LOAD_OFFSET      equ 0
 
 
 times 510-($-$$) db 0
-dw 0AA55h
+dw 0x0AA55
 
 
 buffer:

@@ -21,7 +21,7 @@ _x86_div64_32:
 
     ; Store upper 32 bits of quotient
     mov bx, [bp + 16]   ; Load quotient pointer
-    mov [bx + 4], eax       ; Store upper 32 bits of quotient
+    mov [bx + 4], eax   ; Store upper 32 bits of quotient
 
     ; Divide lower 32 bits of dividend by divisor
     mov eax, [bp + 4]   ; Load lower 32 bits of dividend
@@ -60,11 +60,11 @@ _x86_Video_WriteCharTeletype:
                         ; bytes are converted to words (you can't push a single byte on the stack)
                         ; [bp + 6] Page (second argument)
 
-    mov ah, 0Eh
+    mov ah, 0x0E
     mov al, [bp + 4]    ; Load character
     mov bh, [bp + 6]    ; Load page number
 
-    int 10h             ; Call BIOS
+    int 0x10            ; Call BIOS
 
     pop bx              ; Restore bx
 
