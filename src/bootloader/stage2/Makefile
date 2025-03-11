@@ -19,7 +19,7 @@ $(BUILD_DIR)/stage2.bin: $(OBJECTS_ASM) $(OBJECTS_C)
 	$(LD16)
 
 $(BUILD_DIR)/stage2/c/%.obj: %.c always
-	$(CC16)
+	$(CC16) $<
 
 $(BUILD_DIR)/stage2/asm/%.obj: %.asm always
 	$(ASM) $(ASMFLAGS) -o $@ $<

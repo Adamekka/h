@@ -1,8 +1,7 @@
-#include "stdio.h"
-#include "stdbool.h"
+#include "io.h"
 #include "x86.h"
 
-void putc(char c) { x86_Video_WriteCharTeletype(c, 0); }
+void putc(char c) { x86_Video_write_char_teletype(c, 0); }
 
 void puts(const char* str) {
     while (*str) {
@@ -152,7 +151,7 @@ int16_t* printf_number(int16_t* argp, Length length, bool sign, int16_t radix) {
             if (sign) {
                 int16_t n = *argp;
                 if (n < 0) {
-                    n = -n;
+                    n = -n; // NOLINT(bugprone-narrowing-conversions)
                     number_sign = -1;
                 }
                 number = (uint64_t)n;
@@ -210,4 +209,16 @@ int16_t* printf_number(int16_t* argp, Length length, bool sign, int16_t radix) {
         putc(buffer[pos]);
 
     return argp;
+}
+
+void print_buffer(const void* message, const void* buffer, uint16_t size) {
+    const uint8_t* u8_buffer = (const uint8_t*)buffer;
+
+    puts(message);
+
+    for (uint16_t i = 0; i < size; i++) {
+        putc(g_hex_chars[u8_buffer[i] >> 4]);
+        putc(g_hex_chars[u8_buffer[i] & 0x0F]);
+    }
+    puts("\r\n");
 }

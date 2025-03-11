@@ -20,7 +20,7 @@ if command -v dosbox-x >/dev/null 2>&1; then
         echo "@SRC\BOOTLO~1\STAGE2\LINKER.LNK"
     } >>"$rsp_file"
 
-    dosbox-x -nolog -c "H:" -c "C:\WATCOM\BINW\WLINK @SRC\BOOTLO~1\STAGE2\\$rsp_file" -c "exit"
+    dosbox-x -nolog -fastlaunch -c "H:" -c "C:\WATCOM\BINW\WLINK @SRC\BOOTLO~1\STAGE2\\$rsp_file" -c "exit"
 
     rm "$rsp_file"
 else

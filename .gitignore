@@ -1,2 +1,3 @@
 build/
 *.ERR
+.DS_Store

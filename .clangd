@@ -1,0 +1,2 @@
+CompileFlags:
+    Add: [-xc, -std=c17, -Dfar=, -D_cdecl=, -Wno-incompatible-library-redeclaration, -Wall, -Wextra]
