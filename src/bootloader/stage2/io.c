@@ -139,7 +139,7 @@ const char g_hex_chars[] = "0123456789abcdef";
 
 int16_t* printf_number(int16_t* argp, Length length, bool sign, int16_t radix) {
     char buffer[32];
-    uint64_t number;
+    uint64_t number; // NOLINT(cppcoreguidelines-init-variables)
     int16_t number_sign = 1;
     int16_t pos = 0;
 
@@ -151,7 +151,8 @@ int16_t* printf_number(int16_t* argp, Length length, bool sign, int16_t radix) {
             if (sign) {
                 int16_t n = *argp;
                 if (n < 0) {
-                    n = -n; // NOLINT(bugprone-narrowing-conversions)
+                    n = -n; // NOLINT(bugprone-narrowing-conversions,
+                            // cppcoreguidelines-narrowing-conversions)
                     number_sign = -1;
                 }
                 number = (uint64_t)n;
@@ -195,7 +196,7 @@ int16_t* printf_number(int16_t* argp, Length length, bool sign, int16_t radix) {
 
     // Convert number to ASCII
     do {
-        uint32_t rem;
+        uint32_t rem; // NOLINT(cppcoreguidelines-init-variables)
         x86_div64_32(number, radix, &number, &rem);
         buffer[pos++] = g_hex_chars[rem];
     } while (number > 0);

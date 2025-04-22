@@ -62,9 +62,11 @@ typedef struct {
     FATFileData open_files[MAX_FILE_HANDLES];
 } FATData;
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
 static FATData far* g_fat_data;
 static uint8_t far* g_fat = NULL;
 static uint32_t g_data_section_lba;
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
 
 bool FAT_read_boot_sector(Disk* disk) {
     return Disk_read_sectors(disk, 0, 1, g_fat_data->boot_sector.raw);
@@ -80,6 +82,7 @@ bool FAT_read_fat(Disk* disk) {
 }
 
 bool FAT_init(Disk* disk) {
+    // NOLINTNEXTLINE(bugprone-casting-through-void)
     g_fat_data = (FATData far*)MEMORY_FAT_ADDR;
 
     if (!FAT_read_boot_sector(disk)) {
@@ -107,9 +110,10 @@ bool FAT_init(Disk* disk) {
     }
 
     // Open root directory
-    uint32_t root_dir_lba = g_fat_data->boot_sector.struct_.reserved_sectors
-                          + g_fat_data->boot_sector.struct_.sectors_per_fat
-                                * g_fat_data->boot_sector.struct_.fat_count;
+    uint32_t root_dir_lba = (g_fat_data->boot_sector.struct_.sectors_per_fat
+                             * g_fat_data->boot_sector.struct_.fat_count)
+                          + g_fat_data->boot_sector.struct_.reserved_sectors;
+
     uint32_t root_dir_size = g_fat_data->boot_sector.struct_.dir_entry_count
                            * sizeof(FATDirectoryEntry);
 
@@ -144,7 +148,7 @@ bool FAT_init(Disk* disk) {
 }
 
 uint32_t FAT_cluster_to_lba(uint32_t cluster) {
-    return (cluster - 2) * g_fat_data->boot_sector.struct_.sectors_per_cluster
+    return ((cluster - 2) * g_fat_data->boot_sector.struct_.sectors_per_cluster)
          + g_data_section_lba;
 }
 

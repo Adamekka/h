@@ -2,12 +2,14 @@
 Checks: >
   abseil-*,
   bugprone-*,
+  cppcoreguidelines-*,
   google-*,
   misc-*,
   modernize-*,
   performance-*,
   portability-*,
   readability-*,
+  -cppcoreguidelines-avoid-magic-numbers,
   -bugprone-easily-swappable-parameters,
   -bugprone-infinite-loop,
   -google-objc-function-naming,
@@ -36,17 +38,12 @@ CheckOptions:
       key: readability-identifier-naming.TemplateParameterCase,
       value: CamelCase,
     }
-  - { key: readability-identifier-naming.FunctionCase, value: lower_case }
-  - {
-      key: readability-identifier-naming.FunctionCase,
-      value: Leading_upper_snake_case,
-    }
   - { key: readability-identifier-naming.VariableCase, value: lower_case }
   - { key: readability-identifier-naming.ClassMemberCase, value: lower_case }
   - { key: readability-identifier-naming.EnumConstantCase, value: UPPER_CASE }
   - {
       key: readability-identifier-naming.ConstexprVariableCase,
-      value: CamelCase,
+      value: UPPER_CASE,
     }
   - {
       key: readability-implicit-bool-conversion.AllowIntegerConditions,

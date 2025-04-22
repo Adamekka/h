@@ -3,10 +3,12 @@
 #include "x86.h"
 
 bool Disk_init(Disk* disk, uint8_t drive_number) {
+    // NOLINTBEGIN(cppcoreguidelines-init-variables)
     uint8_t drive_type;
     uint16_t cylinders;
     uint16_t sectors;
     uint16_t heads;
+    // NOLINTEND(cppcoreguidelines-init-variables)
 
     if (!x86_Disk_get_drive_parameters(
             disk->id, &drive_type, &cylinders, &sectors, &heads
@@ -22,7 +24,7 @@ bool Disk_init(Disk* disk, uint8_t drive_number) {
     return true;
 }
 
-void Disk_LBA2CHS(
+void Disk_LBA2CHS( // NOLINT(readability-identifier-naming)
     Disk* disk,
     uint32_t lba,
     uint16_t* cylinder,
@@ -42,9 +44,11 @@ void Disk_LBA2CHS(
 bool Disk_read_sectors(
     Disk* disk, uint32_t lba, uint8_t sector_count, void far* buffer
 ) {
+    // NOLINTBEGIN(cppcoreguidelines-init-variables)
     uint16_t cylinder;
     uint16_t sector;
     uint16_t head;
+    // NOLINTEND(cppcoreguidelines-init-variables)
 
     Disk_LBA2CHS(disk, lba, &cylinder, &sector, &head);
 

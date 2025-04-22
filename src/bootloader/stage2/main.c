@@ -29,7 +29,7 @@ void _cdecl cstart_(uint16_t boot_drive) {
 
     // cat
     char buffer[100];
-    uint32_t read;
+    uint32_t read; // NOLINT(cppcoreguidelines-init-variables)
     file = FAT_open(&disk, "testdir/test.txt");
     while ((read = FAT_read(&disk, file, sizeof(buffer), buffer)) > 0)
         for (uint32_t i = 0; i < read; i++)
